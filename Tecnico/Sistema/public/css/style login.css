@@ -1,0 +1,182 @@
+:root {
+    --color-primary: #f70c5b;
+    --color-secondary: #ffb6c1;
+    --color-complementary: #ffe6d5;
+    --color-background: #f3c5c5;
+    --color-text: #333;
+    --color-white: #ffffff;
+    --font-main: 'Arial', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: url(../ASSETS/img/7.jpg) no-repeat center center fixed;
+    background-size: cover;
+    font-family: var(--font-main);
+    color: var(--color-text);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-section {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.auth-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.auth-form {
+    padding: 30px;
+}
+
+.auth-title {
+    color: var(--color-primary);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-align: center;
+    text-shadow: 2px 2px 0px var(--color-secondary),
+                 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+.input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: none;
+    border-bottom: 2px solid var(--color-secondary);
+    background-color: transparent;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.input-container input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.input-container label {
+    position: absolute;
+    top: 10px;
+    left: 40px;
+    font-size: 16px;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.input-container input:focus + label,
+.input-container input:not(:placeholder-shown) + label {
+    top: -20px;
+    left: 0;
+    font-size: 12px;
+    color: var(--color-primary);
+}
+
+.input-container i {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: var(--color-secondary);
+    transition: color 0.3s ease;
+}
+
+.input-container input:focus ~ i {
+    color: var(--color-primary);
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+    background-color: var(--color-secondary);
+}
+
+.auth-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.auth-link a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.auth-link a:hover {
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-form {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* 3D effect for inputs on focus */
+.input-container input:focus {
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    transition-duration: 0.3s;
+    transition-property: box-shadow, transform;
+}
+
+.input-container input:focus:hover,
+.input-container input:focus:active {
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .auth-section {
+        padding: 10px;
+    }
+
+    .auth-form {
+        padding: 20px;
+    }
+
+    .auth-title {
+        font-size: 2rem;
+    }
+}
+  
