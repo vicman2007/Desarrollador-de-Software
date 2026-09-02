@@ -1,61 +1,192 @@
-# CodeIgniter 4 Framework
+# Sistema Misves
 
-## What is CodeIgniter?
+Sistema web para la gestión de una pastelería desarrollado con **CodeIgniter 4**, PHP y MySQL. Permite publicar el catálogo de productos, administrar usuarios, gestionar pedidos y domicilios, moderar reseñas y consultar estadísticas de ventas.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Características
 
-This repository holds the distributable version of the framework.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+- Catálogo público de productos.
+- Registro, inicio y cierre de sesión.
+- Contraseñas almacenadas con `password_hash`.
+- Perfiles con roles:
+  - Cliente: rol `1`.
+  - Administrador: rol `2`.
+  - Domiciliario: rol `3`.
+- Administración de usuarios, productos, pedidos y reseñas.
+- Gestión de estados de domicilios.
+- Estadísticas y productos más vendidos.
+- Migraciones y seeders de CodeIgniter 4.
+- Protección de rutas mediante filtros de autenticación y roles.
+- Diseño adaptable para escritorio y dispositivos móviles.
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Requisitos
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- PHP 8.2 o superior.
+- Composer.
+- MySQL 8 o MariaDB.
+- Extensiones PHP: `intl`, `mbstring`, `mysqli`, `json` y `curl`.
+- Apache o el servidor integrado de CodeIgniter 4.
 
-## Important Change with index.php
+## Instalación local
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+1. Clona o copia el proyecto dentro de tu servidor local.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+2. Instala las dependencias:
 
-**Please** read the user guide for a better explanation of how CI4 works!
+```bash
+composer install
+```
 
-## Repository Management
+3. Crea una base de datos MySQL llamada:
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+```text
+pasteler_misves
+```
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+4. Revisa el archivo `.env` y ajusta los datos de conexión:
 
-## Contributing
+```ini
+CI_ENVIRONMENT = development
+app.baseURL = 'http://localhost:8080'
 
-We welcome contributions from the community.
+database.default.hostname = localhost
+database.default.database = pasteler_misves
+database.default.username = root
+database.default.password =
+database.default.DBDriver = MySQLi
+database.default.port = 3306
+```
 
-Please read the [*Contributing to CodeIgniter*](https://github.com/codeigniter4/CodeIgniter4/blob/develop/CONTRIBUTING.md) section in the development repository.
+5. Ejecuta las migraciones y datos iniciales:
 
-## Server Requirements
+```bash
+php spark migrate --seed
+```
 
-PHP version 8.2 or higher is required, with the following extensions installed:
+6. Inicia el servidor:
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+```bash
+php spark serve
+```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
+Abre `http://localhost:8080` en el navegador.
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+## Credenciales de prueba
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Las credenciales se crean mediante `UsuarioSeeder`:
+
+| Rol | Correo | Contraseña |
+|---|---|---|
+| Administrador | `admin@misves.com` | `admin123` |
+| Cliente | `cliente@misves.com` | `cliente123` |
+| Domiciliario | `domicilio@misves.com` | `domicilio123` |
+
+Cambia estas credenciales antes de usar el sistema en producción.
+
+## Estructura principal
+
+```text
+app/
+├── Config/             Configuración y rutas
+├── Controllers/        Controladores de la aplicación
+├── Database/
+│   ├── Migrations/     Estructura de la base de datos
+│   └── Seeds/          Datos iniciales
+├── Filters/            Autenticación y autorización por rol
+├── Models/             Modelos de acceso a datos
+└── Views/              Vistas HTML
+public/
+├── css/                Hojas de estilos
+├── img/                Imágenes públicas
+└── uploads/            Imágenes de productos
+```
+
+## Rutas principales
+
+- `/` — Página de inicio.
+- `/catalogo` — Catálogo público.
+- `/login` — Inicio de sesión.
+- `/registro` — Registro de clientes.
+- `/dashboard` — Panel del usuario autenticado.
+- `/perfil` — Edición del perfil.
+- `/admin/usuarios` — Administración de usuarios.
+- `/admin/productos` — Administración de productos.
+- `/admin/pedidos` — Administración de pedidos.
+- `/admin/resenas` — Administración de reseñas.
+- `/admin/estadisticas` — Estadísticas.
+- `/domicilios` — Gestión de domicilios para administradores y domiciliarios.
+
+## Base de datos
+
+Las migraciones crean las tablas principales del sistema:
+
+- `rol`
+- `usuario`
+- `producto`
+- `resena`
+- `pedidos`
+- `detallepedido`
+
+Para reiniciar la base de datos durante el desarrollo:
+
+```bash
+php spark migrate:refresh --seed
+```
+
+Este comando elimina y vuelve a crear las tablas. No lo ejecutes en producción sin realizar una copia de seguridad.
+
+## Configuración con XAMPP
+
+Si usas XAMPP:
+
+1. Copia el proyecto en `htdocs`.
+2. Inicia Apache y MySQL.
+3. Crea la base de datos `pasteler_misves` desde phpMyAdmin.
+4. Configura `.env` con tus credenciales locales.
+5. Ejecuta `composer install` y las migraciones.
+6. Accede mediante `http://localhost/sistema/public/` o configura un VirtualHost apuntando a la carpeta `public`.
+
+La carpeta pública debe ser el documento raíz del servidor. No apuntes Apache al directorio raíz del proyecto porque expondrías archivos internos.
+
+## Seguridad
+
+- No subas el archivo `.env` con credenciales reales.
+- Usa HTTPS en producción.
+- Cambia las contraseñas de prueba.
+- Mantén `CI_ENVIRONMENT = production` en el servidor de producción.
+- Valida y limita los archivos que se suban a `public/uploads`.
+- Realiza copias de seguridad de la base de datos.
+
+## Comandos útiles
+
+```bash
+php spark routes              # Lista las rutas disponibles
+php spark migrate             # Ejecuta migraciones pendientes
+php spark db:seed DatabaseSeeder
+php spark cache:clear         # Limpia la caché
+vendor/bin/phpunit            # Ejecuta las pruebas
+```
+
+## Tecnologías
+
+- CodeIgniter 4.
+- PHP 8.2+.
+- MySQL/MariaDB.
+- Composer.
+- HTML, CSS y JavaScript.
+- Dompdf para documentos PDF.
+
+## Estado del proyecto
+
+El proyecto está estructurado para ejecutarse localmente con CodeIgniter 4. Antes de publicarlo, configura las credenciales reales, revisa las reglas del servidor web, prueba todos los flujos con datos reales y ejecuta la suite de pruebas.
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia incluida en el archivo `LICENSE`.
+
+## Soporte
+
+Para problemas con CodeIgniter, consulta la [documentación oficial](https://codeigniter.com/user_guide/). Para incidencias específicas del sistema, revisa primero la configuración de `.env`, la conexión MySQL y los registros de `writable/logs`.
+
+---
+
+Desarrollado para la gestión de la pastelería Misves.
