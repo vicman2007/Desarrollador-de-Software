@@ -4,130 +4,88 @@ use CodeIgniter\Router\RouteCollection;
 
 /**
  * @var RouteCollection $routes
+ *
+ * Rutas de la Reposteria Misves.
+ * Roles: 1 = cliente, 2 = administrador, 3 = domiciliario.
  */
 
-$routes->get('/', 'InicioController::index');
-$routes->get('login', 'LoginController::index');
-$routes->post('login', 'LoginController::login');
-$routes->get('dashboard', 'LoginController::dashboard');
-$routes->get('logout', 'LoginController::logout');
-$routes->get('registro', 'RegistroController::registrar');
-$routes->post('guardar', 'RegistroController::guardar');
+// ---------------------------------------------------------------------
+// Publicas
+// ---------------------------------------------------------------------
+$routes->get('/', 'Home::index');
+$routes->get('acerca', 'Home::acerca');
+$routes->get('contacto', 'Home::contacto');
+$routes->get('mision-vision', 'Home::misionVision');
+$routes->get('catalogo', 'Home::catalogo');
 
-// Recuperacion de contrasena (vistas web)
-$routes->get('olvide-password', 'PasswordController::olvide');
-$routes->post('olvide-password', 'PasswordController::enviarEnlace');
-$routes->get('reset-password', 'PasswordController::reset');
-$routes->post('reset-password', 'PasswordController::actualizar');
+// ---------------------------------------------------------------------
+// Autenticacion
+// ---------------------------------------------------------------------
+$routes->get('login', 'Auth::login');
+$routes->post('login', 'Auth::procesarLogin');
+$routes->get('registro', 'Auth::registro');
+$routes->post('registro', 'Auth::procesarRegistro');
+$routes->get('logout', 'Auth::logout');
 
-$routes->get('personas', 'AdminPersonaController::index');                     // Lista y Filtros
-$routes->get('personas/crear', 'AdminPersonaController::crear');               // Vista Formulario Agregar
-$routes->post('personas/guardar', 'AdminPersonaController::guardar');           // Procesar nuevo
-$routes->get('personas/editar/(:num)/(:num)', 'AdminPersonaController::editar/$1/$2'); // Vista Formulario Editar (Pasa ID y TipoDoc)
-$routes->post('personas/actualizar', 'AdminPersonaController::actualizar');     // Procesar Cambios
-$routes->get('personas/eliminar/(:num)/(:num)', 'AdminPersonaController::eliminar/$1/$2'); // Acción Eliminar (Pasa ID y TipoDoc)
+// ---------------------------------------------------------------------
+// Zona privada (requiere sesion)
+// ---------------------------------------------------------------------
+$routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 
+// Perfil: cualquier usuario autenticado
+$routes->group('perfil', ['filter' => 'auth'], static function ($routes) {
+    $routes->get('/', 'Perfil::index');
+    $routes->post('actualizar', 'Perfil::actualizar');
+    $routes->post('password', 'Perfil::cambiarPassword');
+});
 
-$routes->get('facturas', 'FacturaController::index');
+// ---------------------------------------------------------------------
+// Modulos de administrador (rol 2)
+// ---------------------------------------------------------------------
+$routes->group('admin', ['filter' => 'role:2'], static function ($routes) {
 
-// 1. Panel principal que muestra el Grid de simulación (Tu Mesas 2.Html)
-$routes->get('mesas', 'Mesas::index');
+    // Usuarios
+    $routes->get('usuarios', 'Usuarios::index');
+    $routes->get('usuarios/crear', 'Usuarios::crear');
+    $routes->post('usuarios/guardar', 'Usuarios::guardar');
+    $routes->get('usuarios/editar/(:num)', 'Usuarios::editar/$1');
+    $routes->post('usuarios/actualizar/(:num)', 'Usuarios::actualizar/$1');
+    $routes->get('usuarios/eliminar/(:num)', 'Usuarios::eliminar/$1');
 
-// 2. Pantalla con el formulario para registrar mesas (Tu Agregar Mesa.Html)
-$routes->get('mesas/agregar', 'Mesas::agregar');
+    // Productos
+    $routes->get('productos', 'Productos::index');
+    $routes->get('productos/crear', 'Productos::crear');
+    $routes->post('productos/guardar', 'Productos::guardar');
+    $routes->get('productos/editar/(:num)', 'Productos::editar/$1');
+    $routes->post('productos/actualizar/(:num)', 'Productos::actualizar/$1');
+    $routes->get('productos/eliminar/(:num)', 'Productos::eliminar/$1');
 
-// 3. Destino del formulario que procesa el insert en MySQL
-$routes->post('mesas/guardar', 'Mesas::guardar');
+    // Resenas
+    $routes->get('resenas', 'Resenas::index');
+    $routes->get('resenas/crear', 'Resenas::crear');
+    $routes->post('resenas/guardar', 'Resenas::guardar');
+    $routes->get('resenas/editar/(:num)', 'Resenas::editar/$1');
+    $routes->post('resenas/actualizar/(:num)', 'Resenas::actualizar/$1');
+    $routes->get('resenas/eliminar/(:num)', 'Resenas::eliminar/$1');
 
-// 1. La URL exacta que lee el celular al escanear el QR permanente de la mesa
-$routes->get('cliente/escanear/(:num)', 'ClienteQR::escanear/$1');
+    // Pedidos
+    $routes->get('pedidos', 'Pedidos::index');
+    $routes->get('pedidos/crear', 'Pedidos::crear');
+    $routes->post('pedidos/guardar', 'Pedidos::guardar');
+    $routes->get('pedidos/editar/(:num)', 'Pedidos::editar/$1');
+    $routes->post('pedidos/actualizar/(:num)', 'Pedidos::actualizar/$1');
+    $routes->get('pedidos/eliminar/(:num)', 'Pedidos::eliminar/$1');
 
-// 2. Destino del formulario especial que procesa el Nombre, Cédula y abre el Pedido
-$routes->post('cliente/registrar_acceso', 'ClienteQR::registrarAcceso');
+    // Estadisticas y analitica
+    $routes->get('estadisticas', 'Estadisticas::index');
+    $routes->get('mas-vendidos', 'MasVendidos::index');
+});
 
-// 3. Formulario de Pedidos para el Cliente (Tu Formulario Menu.Html)
-$routes->get('cliente/pedido', 'ClienteQR::pantallaPedido');
-
-// 4. Carrito del cliente: añadir, eliminar y confirmar el pedido
-$routes->post('cliente/agregar_carrito', 'ClienteQR::agregarCarrito');
-$routes->get('cliente/eliminar_carrito/(:any)', 'ClienteQR::eliminarCarrito/$1');
-$routes->post('cliente/confirmar_pedido', 'ClienteQR::confirmarPedido');
-$routes->get('cliente/cancelar_pedido', 'ClienteQR::cancelarPedido');
-
-// 5. Estado actual del pedido del cliente (Muestra el reporte del Cocinero)
-$routes->get('cliente/estado', 'ClienteQR::verEstado');
-
-// Rutas nuevas para Editar y Actualizar
-$routes->get('mesas/editar/(:num)', 'Mesas::editar/$1');
-$routes->post('mesas/actualizar', 'Mesas::actualizar');
-
-// Ruta nueva para Eliminar
-$routes->get('tables/delete/(:num)', 'Tables::delete/$1');
-
-// Link to the "Orders" button on your menu that loads the kitchen view
-$routes->get('pedidos', 'Cocina::index');
-
-// Ruta interna para procesar el cambio de los estados semáforo
-$routes->get('cocina/cambiarestado/(:num)/(:any)', 'Cocina::cambiarEstado/$1/$2');
-
-// --- BILLING AND CASH MODULE ---
-// 1. Carga el historial general (panel_facturas.php)
-$routes->get('facturas', 'FacturaController::index');
-
-// 2. Carga la tirilla de pago individual e impresión (ver_factura.php)
-$routes->get('factura/ver/(:num)', 'FacturaController::ver/$1');
-
-// 3. Procesa la eliminación física de la factura tras ser impresa
-$routes->get('invoices/delete/(:num)', 'InvoiceController::delete/$1');
-
-// routes for PDF reports
-$routes->get('reportes', 'ReporteController::index');
-$routes->get('reportes/generar', 'ReporteController::generar');
-$routes->get('reportes/pdf', 'ReporteController::pdfVentas');
-$routes->get('reportes/productos', 'ReporteController::pdfProductos');
-$routes->get('reportes/usuarios', 'ReporteController::pdfUsuarios');
-
-
-// Carga la tirilla de pago mediante método GET
-$routes->get('factura/ver/(:num)', 'FacturaController::ver/$1');
-
-// Procesa la eliminación mediante formulario seguro POST
-$routes->post('facturas/eliminar', 'FacturaController::eliminar');
-
-// Rutas del CRUD del Menú (Admin)
-$routes->get('gestion-menu', 'MenuController::index');
-$routes->post('menu/guardar', 'MenuController::guardar');
-$routes->get('menu/eliminar/(:any)', 'MenuController::eliminar/$1');
-
-// Ruta del Menú Digital (Cliente)
-$routes->get('menu_digital', 'MenuController::digital');
-
-$routes->post('menu/guardarCategoria', 'MenuController::guardarCategoria');
-
-/*
-|--------------------------------------------------------------------------
-| API REST (para consumir desde Postman)
-|--------------------------------------------------------------------------
-|
-| Ejemplos:
-|   POST   /api/login
-|   GET    /api/mesas        GET /api/mesas/1
-|   POST   /api/mesas        PUT /api/mesas/1    
-|   DELETE /api/mesas/1
-|   (igual para personas, menu, pedidos, facturas)
-*/
-$routes->group('api', ['namespace' => 'App\Controllers\Api', 'filter' => 'cors'], static function ($routes) {
-    // Autenticacion
-    $routes->post('login', 'AuthApi::login');
-
-    // Recuperacion de contrasena
-    $routes->post('forgot-password', 'AuthApi::forgotPassword');
-    $routes->post('reset-password', 'AuthApi::resetPassword');
-
-    // Recursos CRUD
-    $routes->resource('mesas',    ['controller' => 'MesaApi']);
-    $routes->resource('menu',     ['controller' => 'MenuApi']);
-    $routes->resource('pedidos',  ['controller' => 'PedidoApi']);
-    $routes->resource('facturas', ['controller' => 'FacturaApi']);
-    $routes->resource('personas', ['controller' => 'PersonaApi']);
+// ---------------------------------------------------------------------
+// Modulo de domicilios (administrador rol 2 y domiciliario rol 3)
+// ---------------------------------------------------------------------
+$routes->group('domicilios', ['filter' => 'role:2,3'], static function ($routes) {
+    $routes->get('/', 'Domicilios::index');
+    $routes->get('estado/(:any)', 'Domicilios::filtrar/$1');
+    $routes->post('actualizar-estado', 'Domicilios::actualizarEstado');
 });

@@ -1,0 +1,1 @@
+<?= $this->extend('layouts/main') ?><?= $this->section('content') ?><section class="section"><h1>Estadísticas</h1><div class="stats"><div class="stat"><span>Pedidos totales</span><strong><?= esc($totalPedidos) ?></strong></div><div class="stat"><span>Productos activos</span><strong><?= esc($productos) ?></strong></div></div></section><?= $this->endSection() ?>

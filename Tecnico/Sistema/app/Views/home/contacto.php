@@ -1,0 +1,1 @@
+<?= $this->extend('layouts/main') ?><?= $this->section('content') ?><section class="section"><p>ESTAMOS PARA AYUDARTE</p><h1>Contacto</h1><div class="card"><p>Escríbenos para pedidos personalizados, domicilios y celebraciones.</p><p><strong>Correo:</strong> hola@misves.test</p><p><strong>Horario:</strong> lunes a sábado, 9:00 a 18:00</p></div></section><?= $this->endSection() ?>

@@ -1,0 +1,1 @@
+<?= $this->extend('layouts/main') ?><?= $this->section('content') ?><section class="section"><p>CONÓCENOS</p><h1>Acerca de Misves</h1><p>Somos una pastelería artesanal dedicada a crear momentos dulces con recetas cuidadas, ingredientes frescos y atención cercana.</p></section><?= $this->endSection() ?>

@@ -29,7 +29,7 @@ class Database extends Config
 'hostname' => '127.0.0.1',
 'username' => 'root',
 'password' => '',
-'database' => 'sistema',
+'database' => 'pasteler_misves',
 'DBDriver' => 'MySQLi',
 'DBPrefix' => '',
 'pConnect' => false,
@@ -42,7 +42,7 @@ class Database extends Config
 'compress' => false,
 'strictOn' => false,
 'failover' => [],
-'port' => 3307,
+'port' => 3306,
 'numberNative' => false,
 'foundRows' => false,
 'dateFormat' => [
