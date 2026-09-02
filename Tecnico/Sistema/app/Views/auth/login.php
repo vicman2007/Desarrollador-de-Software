@@ -1,0 +1,4 @@
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
+<div class="form-wrap"><h1>Iniciar sesión</h1><p>Entra a tu cuenta para continuar.</p><?php if ($errors = session()->getFlashdata('errors')): ?><div class="alert error"><?php foreach ($errors as $error): ?><div><?= esc($error) ?></div><?php endforeach; ?></div><?php endif; ?><form method="post" action="<?= site_url('login') ?>"><?= csrf_field() ?><label for="correo">Correo</label><input id="correo" type="email" name="correo" value="<?= old('correo') ?>" required><label for="contrasena">Contraseña</label><input id="contrasena" type="password" name="contrasena" required><button class="button" type="submit">Ingresar</button></form><p>¿No tienes cuenta? <a href="<?= site_url('registro') ?>">Regístrate</a></p></div>
+<?= $this->endSection() ?>

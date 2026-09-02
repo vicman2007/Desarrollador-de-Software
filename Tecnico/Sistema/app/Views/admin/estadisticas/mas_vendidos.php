@@ -1,0 +1,1 @@
+<?= $this->extend('layouts/main') ?><?= $this->section('content') ?><section class="section"><h1>Productos más vendidos</h1><p>Los datos se actualizarán cuando existan pedidos con detalle de productos.</p></section><?= $this->endSection() ?>
