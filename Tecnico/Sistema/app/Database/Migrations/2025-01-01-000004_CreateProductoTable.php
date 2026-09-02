@@ -13,16 +13,14 @@ class CreateProductoTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'CodProducto'         => ['type' => 'INT', 'constraint' => 11, 'auto_increment' => true],
-            'NombreProducto'      => ['type' => 'VARCHAR', 'constraint' => 60, 'null' => true],
-            'DescripcionProducto' => ['type' => 'VARCHAR', 'constraint' => 150, 'null' => true],
-            'Precio'              => ['type' => 'DOUBLE', 'null' => true, 'default' => 0],
-            'ImagenProducto'      => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
-            'stock'               => ['type' => 'INT', 'constraint' => 11, 'null' => true, 'default' => 0],
-            'EstadoProducto'      => ['type' => 'VARCHAR', 'constraint' => 30, 'null' => true, 'default' => 'Disponible'],
-            'idResenaFK'          => ['type' => 'INT', 'constraint' => 11, 'null' => true],
+            'idProducto'   => ['type' => 'INT', 'constraint' => 11, 'auto_increment' => true],
+            'nombre'       => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => false],
+            'descripcion'  => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'precio'       => ['type' => 'DOUBLE', 'null' => false, 'default' => 0],
+            'imagen'       => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'estado'       => ['type' => 'INT', 'constraint' => 1, 'null' => false, 'default' => 1],
         ]);
-        $this->forge->addKey('CodProducto', true);
+        $this->forge->addKey('idProducto', true);
         $this->forge->createTable('producto', true, ['ENGINE' => 'InnoDB']);
     }
 

@@ -12,23 +12,19 @@ class CreatePedidosTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'idCarrito'         => ['type' => 'INT', 'constraint' => 11, 'auto_increment' => true],
-            'nombreUsuario'     => ['type' => 'VARCHAR', 'constraint' => 60, 'null' => true],
-            'productosAnadidos' => ['type' => 'VARCHAR', 'constraint' => 150, 'null' => true],
-            'Estado'            => ['type' => 'VARCHAR', 'constraint' => 30, 'null' => true, 'default' => 'realizado'],
-            'DireccionEntrega'  => ['type' => 'VARCHAR', 'constraint' => 80, 'null' => true],
-            'FechaYHoraEntrega' => ['type' => 'DATETIME', 'null' => true],
-            'FormaPago'         => ['type' => 'VARCHAR', 'constraint' => 30, 'null' => true],
-            'TotalComprar'      => ['type' => 'DOUBLE', 'null' => true, 'default' => 0],
-            'idUsuarioFK'       => ['type' => 'INT', 'constraint' => 11, 'null' => true],
+            'idPedido'    => ['type' => 'INT', 'constraint' => 11, 'auto_increment' => true],
+            'idUsuario'   => ['type' => 'INT', 'constraint' => 11, 'null' => false],
+            'fechaPedido' => ['type' => 'DATETIME', 'null' => false],
+            'estado'      => ['type' => 'VARCHAR', 'constraint' => 30, 'null' => false, 'default' => 'Pendiente'],
+            'TotalComprar'=> ['type' => 'DOUBLE', 'null' => true, 'default' => 0],
         ]);
-        $this->forge->addKey('idCarrito', true);
-        $this->forge->addForeignKey('idUsuarioFK', 'usuario', 'idUsuario', 'SET NULL', 'CASCADE');
-        $this->forge->createTable('pedidos', true, ['ENGINE' => 'InnoDB']);
+        $this->forge->addKey('idPedido', true);
+        $this->forge->addForeignKey('idUsuario', 'usuario', 'idUsuario', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('pedido', true, ['ENGINE' => 'InnoDB']);
     }
 
     public function down()
     {
-        $this->forge->dropTable('pedidos', true);
+        $this->forge->dropTable('pedido', true);
     }
 }

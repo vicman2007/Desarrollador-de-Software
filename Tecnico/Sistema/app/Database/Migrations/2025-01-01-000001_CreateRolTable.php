@@ -14,7 +14,7 @@ class CreateRolTable extends Migration
     {
         $this->forge->addField([
             'idRol'          => ['type' => 'INT', 'constraint' => 11, 'auto_increment' => true],
-            'DescripcionRol' => ['type' => 'VARCHAR', 'constraint' => 30, 'null' => true],
+            'nombre' => ['type' => 'VARCHAR', 'constraint' => 30, 'null' => false],
         ]);
         $this->forge->addKey('idRol', true);
         $this->forge->createTable('rol', true, ['ENGINE' => 'InnoDB']);

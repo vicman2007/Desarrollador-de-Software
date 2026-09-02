@@ -12,18 +12,16 @@ class CreateDetallePedidoTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'idDetalle'       => ['type' => 'INT', 'constraint' => 11, 'auto_increment' => true],
-            'Cantidad'        => ['type' => 'INT', 'constraint' => 11, 'null' => true, 'default' => 1],
-            'PrecioUnitario'  => ['type' => 'DOUBLE', 'null' => true, 'default' => 0],
-            'TotalProducto'   => ['type' => 'DOUBLE', 'null' => true, 'default' => 0],
-            'SubtotalComprar' => ['type' => 'DOUBLE', 'null' => true, 'default' => 0],
-            'TotalComprar'    => ['type' => 'DOUBLE', 'null' => true, 'default' => 0],
-            'idCarritoFK'     => ['type' => 'INT', 'constraint' => 11, 'null' => true],
-            'CodProductoFK'   => ['type' => 'INT', 'constraint' => 11, 'null' => true],
+            'idDetallePedido' => ['type' => 'INT', 'constraint' => 11, 'auto_increment' => true],
+            'idPedido'        => ['type' => 'INT', 'constraint' => 11, 'null' => false],
+            'idProducto'      => ['type' => 'INT', 'constraint' => 11, 'null' => false],
+            'cantidad'        => ['type' => 'INT', 'constraint' => 11, 'null' => false, 'default' => 1],
+            'precioUnitario'  => ['type' => 'DOUBLE', 'null' => false, 'default' => 0],
+            'TotalComprar'    => ['type' => 'DOUBLE', 'null' => false, 'default' => 0],
         ]);
-        $this->forge->addKey('idDetalle', true);
-        $this->forge->addForeignKey('idCarritoFK', 'pedidos', 'idCarrito', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('CodProductoFK', 'producto', 'CodProducto', 'SET NULL', 'CASCADE');
+        $this->forge->addKey('idDetallePedido', true);
+        $this->forge->addForeignKey('idPedido', 'pedido', 'idPedido', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('idProducto', 'producto', 'idProducto', 'RESTRICT', 'CASCADE');
         $this->forge->createTable('detallepedido', true, ['ENGINE' => 'InnoDB']);
     }
 

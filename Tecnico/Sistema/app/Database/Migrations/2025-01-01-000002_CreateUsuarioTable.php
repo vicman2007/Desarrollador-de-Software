@@ -14,15 +14,12 @@ class CreateUsuarioTable extends Migration
     {
         $this->forge->addField([
             'idUsuario'        => ['type' => 'INT', 'constraint' => 11, 'auto_increment' => true],
-            'nombreUsuario'    => ['type' => 'VARCHAR', 'constraint' => 60, 'null' => true],
-            'tipodocumento'    => ['type' => 'VARCHAR', 'constraint' => 30, 'null' => true],
-            'NoDoc'            => ['type' => 'BIGINT', 'constraint' => 20, 'null' => false, 'default' => 0],
-            'correoUsuario'    => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => false],
-            'direccionUsuario' => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
-            'telefonoUsuario'  => ['type' => 'BIGINT', 'constraint' => 20, 'null' => true],
-            'estadoUsuario'    => ['type' => 'VARCHAR', 'constraint' => 20, 'null' => true, 'default' => 'Activo'],
-            'contrasena'       => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
-            'idRolFK'          => ['type' => 'INT', 'constraint' => 11, 'null' => true],
+            'nombre'       => ['type' => 'VARCHAR', 'constraint' => 60, 'null' => false],
+            'apellido'     => ['type' => 'VARCHAR', 'constraint' => 60, 'null' => true],
+            'correo'       => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => false],
+            'contrasena'   => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => false],
+            'idRol'        => ['type' => 'INT', 'constraint' => 11, 'null' => false, 'default' => 1],
+            'estado'       => ['type' => 'INT', 'constraint' => 1, 'null' => false, 'default' => 1],
         ]);
         $this->forge->addKey('idUsuario', true);
         $this->forge->addUniqueKey('correoUsuario');
