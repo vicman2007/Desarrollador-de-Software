@@ -123,8 +123,8 @@ Las migraciones crean las tablas principales del sistema:
 - `usuario`
 - `producto`
 - `resena`
-- `pedidos`
-- `detallepedido`
+- `pedido`
+- `detalle_pedido`
 
 Para reiniciar la base de datos durante el desarrollo:
 

@@ -7,22 +7,85 @@ use App\Models\ProductoModel;
 class Productos extends BaseController
 {
     private ProductoModel $model;
-    public function __construct() { $this->model = new ProductoModel(); }
-    public function index() { return view('admin/productos/index', ['productos' => $this->model->orderBy('idProducto', 'DESC')->findAll()]); }
-    public function crear() { return view('admin/productos/form', ['producto' => null]); }
+
+    public function __construct()
+    {
+        $this->model = new ProductoModel();
+    }
+
+    public function index()
+    {
+        return view('admin/productos/index', [
+            'title' => 'Productos | Misves',
+            'productos' => $this->model->orderBy('idProducto', 'DESC')->findAll(),
+        ]);
+    }
+
+    public function crear()
+    {
+        return view('admin/productos/form', ['title' => 'Nuevo producto | Misves', 'producto' => null]);
+    }
+
     public function guardar()
     {
-        $rules = ['nombre' => 'required|max_length[120]', 'precio' => 'required|decimal'];
-        if (! $this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        $this->model->insert(['nombre' => trim($this->request->getPost('nombre')), 'descripcion' => trim($this->request->getPost('descripcion') ?? ''), 'precio' => $this->request->getPost('precio'), 'imagen' => trim($this->request->getPost('imagen') ?? ''), 'estado' => 1]);
-        return redirect()->to('/admin/productos')->with('success', 'Producto creado.');
+        if (! $this->validateProducto()) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $this->model->insert($this->productoData());
+        return redirect()->to(site_url('admin/productos'))->with('success', 'Producto creado correctamente.');
     }
-    public function editar(int $id) { return view('admin/productos/form', ['producto' => $this->model->find($id)]); }
+
+    public function editar(int $id)
+    {
+        $producto = $this->model->find($id);
+        if (! $producto) {
+            return redirect()->to(site_url('admin/productos'))->with('error', 'Producto no encontrado.');
+        }
+        return view('admin/productos/form', ['title' => 'Editar producto | Misves', 'producto' => $producto]);
+    }
+
     public function actualizar(int $id)
     {
-        if (! $this->validate(['nombre' => 'required|max_length[120]', 'precio' => 'required|decimal'])) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        $this->model->update($id, ['nombre' => trim($this->request->getPost('nombre')), 'descripcion' => trim($this->request->getPost('descripcion') ?? ''), 'precio' => $this->request->getPost('precio'), 'imagen' => trim($this->request->getPost('imagen') ?? ''), 'estado' => (int) $this->request->getPost('estado')]);
-        return redirect()->to('/admin/productos')->with('success', 'Producto actualizado.');
+        if (! $this->model->find($id)) {
+            return redirect()->to(site_url('admin/productos'))->with('error', 'Producto no encontrado.');
+        }
+        if (! $this->validateProducto()) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+        $this->model->update($id, $this->productoData(false));
+        return redirect()->to(site_url('admin/productos'))->with('success', 'Producto actualizado correctamente.');
     }
-    public function eliminar(int $id) { $this->model->update($id, ['estado' => 0]); return redirect()->to('/admin/productos')->with('success', 'Producto desactivado.'); }
+
+    public function eliminar(int $id)
+    {
+        $this->model->update($id, ['estado' => 0]);
+        return redirect()->to(site_url('admin/productos'))->with('success', 'Producto desactivado.');
+    }
+
+    private function validateProducto(): bool
+    {
+        return $this->validate([
+            'nombre' => 'required|min_length[2]|max_length[100]',
+            'descripcion' => 'permit_empty|max_length[255]',
+            'precio' => 'required|decimal|greater_than[0]',
+            'imagen' => 'permit_empty|max_length[255]',
+        ]);
+    }
+
+    private function productoData(bool $includeEstado = true): array
+    {
+        $data = [
+            'nombre' => trim((string) $this->request->getPost('nombre')),
+            'descripcion' => trim((string) $this->request->getPost('descripcion')),
+            'precio' => (float) $this->request->getPost('precio'),
+            'imagen' => trim((string) $this->request->getPost('imagen')),
+        ];
+        if ($includeEstado) {
+            $data['estado'] = 1;
+        } else {
+            $data['estado'] = (int) ($this->request->getPost('estado') ?? 1);
+        }
+        return $data;
+    }
 }
